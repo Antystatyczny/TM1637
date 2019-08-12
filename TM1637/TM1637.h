@@ -92,8 +92,9 @@ void TM_Init(void);
 void TM_RegisterKeyboardCallback(OnPress cb);
 
 /*
+ * Function sets new value on selected digit
  * param: digit - selected digit (0 to 5)
- * param: value - new value (0 to 9)  for selected digit
+ * param: value - new value (0 to 16 or TM_DIGIT_VALUE_x) for selected digit
  * param: dp - new state of decimal point for selected digit
  * return: none
  */
