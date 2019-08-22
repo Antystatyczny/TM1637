@@ -122,26 +122,25 @@ static void TM_write(uint8_t *msg, uint8_t len)
 	TM_stop();
 }
 
-void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t dp_or_custom)
+void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t character_type)
 {
 	uint8_t command = TM_WRITE_INCR;
 	uint8_t msg[2];
 
 	msg[0] = TM_BASE_ADDR + digit;
-	//msg[1] = digits[value];
 
-	if(value != TM_DIGIT_VALUE_CUSTOM)
+	if(character_type != TM_CHAR_CUSTOM)
 	{
-		msg[1] = digits[value];
+		msg[1] = digits[value];//load bitmap from LUT
 
-		if(dp_or_custom == TM_DP_on)
+		if(character_type == TM_CHAR_WITH_DP)
 		{
-			msg[1] |= (1 << 7);//dp segment is connected to the msb bit
+			msg[1] |= (1 << 7);//enable decimal point
 		}
 	}
 	else
 	{
-		msg[1] = dp_or_custom;
+		msg[1] = value;//insert raw bitmap
 	}
 
 	TM_write(&command, sizeof(command));

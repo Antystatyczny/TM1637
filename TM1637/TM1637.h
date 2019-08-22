@@ -59,7 +59,7 @@
 #define TM_DIGIT_VALUE_E		14
 #define TM_DIGIT_VALUE_F		15
 #define TM_DIGIT_VALUE_OFF		16
-#define TM_DIGIT_VALUE_CUSTOM	17
+
 
 /*
  * Custom digit elements
@@ -79,11 +79,11 @@
 typedef void (*OnPress)(uint8_t);
 
 /*
- * Decimal point state
+ * Character type
  */
-#define	TM_DP_off	0	/* Decimal point is disabled */
-#define	TM_DP_on	1	/* Decimal point is enabled */
-
+#define	TM_CHAR_REGULAR		0	/* Regular character */
+#define	TM_CHAR_WITH_DP		1	/* Regular character with decimal point enabled */
+#define TM_CHAR_CUSTOM		2	/* Custom character made from TM_CUSTOM_SEGMENT_x elements */
 
 
 
@@ -104,13 +104,15 @@ void TM_RegisterKeyboardCallback(OnPress cb);
 /*
  * Function sets new digit on selected position.
  * param: digit - selected digit (0 to 5)
- * param: value - new value (0 to 16 or TM_DIGIT_VALUE_x) for selected digit
- * param: dp_or_custom - if value != TM_DIGIT_VALUE_CUSTOM, new state of decimal
- *  point for selected digit, otherwise new digit value created from concatenated
- *  TM_CUSTOM_SEGMENT_x elements.
+ * param: value - new value (0 to 16 or TM_DIGIT_VALUE_x) for selected digit or
+ * custom character bitmap made from TM_CUSTOM_SEGMENT_x elements
+ * param: character_type:
+ * TM_CHAR_REGULAR treats parameter value as regular value to display (from 0h to Ah or off),
+ * TM_CHAR_WITH_DP treats parameter value as regular value with decimal point enabled (from 0h to Ah or off but DP is on),
+ * TM_CHAR_CUSTOM treats parameter value as custom bitmap made from TM_CUSTOM_SEGMENT_x elements
  * return: none
  */
-void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t dp_or_custom);
+void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t character_type);
 
 /*
  * Sets digits brightness.

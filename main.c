@@ -37,7 +37,7 @@ void TIMER0_Init(void)
 
 void KeyboardCallback(uint8_t code)
 {
-	static uint8_t cnt, dim = 8;
+	static uint8_t cnt, dim = 8, custom = 1;
 
 
 	switch(code)
@@ -85,10 +85,12 @@ void KeyboardCallback(uint8_t code)
 		cnt--;//decrement sample counter
 		break;
 	case TM_KEYCODE_LEFT:
-
+		custom <<= 1;
+		if(custom == 0x40) custom = 0x01;
 		break;
 	case TM_KEYCODE_RIGHT:
-
+		custom >>= 1;
+		if(custom == 0x00) custom = 0x20;
 		break;
 	case TM_KEYCODE_NONE:
 		//key released! You can add an extra code here if release of the key also should be managed
@@ -99,14 +101,14 @@ void KeyboardCallback(uint8_t code)
 	}
 
 	//display counter on the left three digits
-	TM_SetDigit(0, cnt / 100 % 10, TM_DP_off );
-	TM_SetDigit(1, cnt / 10 % 10, TM_DP_off );
-	TM_SetDigit(2, cnt % 10, TM_DP_on );
+	TM_SetDigit(0, cnt / 100 % 10, TM_CHAR_REGULAR );
+	TM_SetDigit(1, cnt / 10 % 10, TM_CHAR_REGULAR );
+	TM_SetDigit(2, cnt % 10, TM_CHAR_WITH_DP );
 
 	//display raw key code on the right three digits
-	TM_SetDigit(3, code / 100 % 10, TM_DP_off );
-	TM_SetDigit(4, code / 10 % 10, TM_DP_off );
-	TM_SetDigit(5, code % 10, TM_DP_off );
+	TM_SetDigit(3, custom, TM_CHAR_CUSTOM );
+	TM_SetDigit(4, code / 10 % 10, TM_CHAR_REGULAR );
+	TM_SetDigit(5, code % 10, TM_CHAR_REGULAR );
 
 	TM_SetDuty(dim);
 }
