@@ -42,24 +42,36 @@
 /*
  * Available digits and letters
  */
-#define TM_DIGIT_VALUE_0	0
-#define TM_DIGIT_VALUE_1	1
-#define TM_DIGIT_VALUE_2	2
-#define TM_DIGIT_VALUE_3	3
-#define TM_DIGIT_VALUE_4	4
-#define TM_DIGIT_VALUE_5	5
-#define TM_DIGIT_VALUE_6	6
-#define TM_DIGIT_VALUE_7	7
-#define TM_DIGIT_VALUE_8	8
-#define TM_DIGIT_VALUE_9	9
-#define TM_DIGIT_VALUE_A	10
-#define TM_DIGIT_VALUE_B	11
-#define TM_DIGIT_VALUE_C	12
-#define TM_DIGIT_VALUE_D	13
-#define TM_DIGIT_VALUE_E	14
-#define TM_DIGIT_VALUE_F	15
-#define TM_DIGIT_VALUE_OFF	16
+#define TM_DIGIT_VALUE_0		0
+#define TM_DIGIT_VALUE_1		1
+#define TM_DIGIT_VALUE_2		2
+#define TM_DIGIT_VALUE_3		3
+#define TM_DIGIT_VALUE_4		4
+#define TM_DIGIT_VALUE_5		5
+#define TM_DIGIT_VALUE_6		6
+#define TM_DIGIT_VALUE_7		7
+#define TM_DIGIT_VALUE_8		8
+#define TM_DIGIT_VALUE_9		9
+#define TM_DIGIT_VALUE_A		10
+#define TM_DIGIT_VALUE_B		11
+#define TM_DIGIT_VALUE_C		12
+#define TM_DIGIT_VALUE_D		13
+#define TM_DIGIT_VALUE_E		14
+#define TM_DIGIT_VALUE_F		15
+#define TM_DIGIT_VALUE_OFF		16
+#define TM_DIGIT_VALUE_CUSTOM	17
 
+/*
+ * Custom digit elements
+ */
+#define TM_CUSTOM_SEGMENT_A		0x01
+#define TM_CUSTOM_SEGMENT_B		0x02
+#define TM_CUSTOM_SEGMENT_C		0x04
+#define TM_CUSTOM_SEGMENT_D		0x08
+#define TM_CUSTOM_SEGMENT_E		0x10
+#define TM_CUSTOM_SEGMENT_F		0x20
+#define TM_CUSTOM_SEGMENT_G		0x40
+#define TM_CUSTOM_SEGMENT_DP	0x80
 
 /*
  * Prototype of pointer to the callback function
@@ -67,13 +79,11 @@
 typedef void (*OnPress)(uint8_t);
 
 /*
- * Decimal point state typedef
+ * Decimal point state
  */
-typedef enum
-{
-	TM_DP_off = 0,	/* Decimal point is disabled */
-	TM_DP_on		/* Decimal point is enabled */
-}TM_DP_StateType;
+#define	TM_DP_off	0	/* Decimal point is disabled */
+#define	TM_DP_on	1	/* Decimal point is enabled */
+
 
 
 
@@ -95,10 +105,12 @@ void TM_RegisterKeyboardCallback(OnPress cb);
  * Function sets new digit on selected position.
  * param: digit - selected digit (0 to 5)
  * param: value - new value (0 to 16 or TM_DIGIT_VALUE_x) for selected digit
- * param: dp - new state of decimal point for selected digit
+ * param: dp_or_custom - if value != TM_DIGIT_VALUE_CUSTOM, new state of decimal
+ *  point for selected digit, otherwise new digit value created from concatenated
+ *  TM_CUSTOM_SEGMENT_x elements.
  * return: none
  */
-void TM_SetDigit(uint8_t digit, uint8_t value, TM_DP_StateType dp);
+void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t dp_or_custom);
 
 /*
  * Sets digits brightness.

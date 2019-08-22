@@ -122,17 +122,26 @@ static void TM_write(uint8_t *msg, uint8_t len)
 	TM_stop();
 }
 
-void TM_SetDigit(uint8_t digit, uint8_t value, TM_DP_StateType dp)
+void TM_SetDigit(uint8_t digit, uint8_t value, uint8_t dp_or_custom)
 {
 	uint8_t command = TM_WRITE_INCR;
 	uint8_t msg[2];
 
 	msg[0] = TM_BASE_ADDR + digit;
-	msg[1] = digits[value];
+	//msg[1] = digits[value];
 
-	if(dp == TM_DP_on)
+	if(value != TM_DIGIT_VALUE_CUSTOM)
 	{
-		msg[1] |= (1 << 7);//dp segment is connected to the msb bit
+		msg[1] = digits[value];
+
+		if(dp_or_custom == TM_DP_on)
+		{
+			msg[1] |= (1 << 7);//dp segment is connected to the msb bit
+		}
+	}
+	else
+	{
+		msg[1] = dp_or_custom;
 	}
 
 	TM_write(&command, sizeof(command));
